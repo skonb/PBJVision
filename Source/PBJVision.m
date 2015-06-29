@@ -563,7 +563,8 @@ typedef NS_ENUM(GLint, PBJVisionUniformLocationTypes)
     }
     
     BOOL isRecording = _flags.recording;
-    if (isRecording) {
+    BOOL isPaused = _flags.paused;
+    if (isRecording && !isPaused) {
         [self pauseVideoCapture];
     }
 
@@ -608,7 +609,7 @@ typedef NS_ENUM(GLint, PBJVisionUniformLocationTypes)
             [_delegate visionDidChangeVideoFormatAndFrameRate:self];
     }];
 
-    if (isRecording) {
+    if (isRecording && !isPaused) {
         [self resumeVideoCapture];
     }
 }
