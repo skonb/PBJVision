@@ -276,6 +276,9 @@
         
 		if (video) {
 			if (_assetWriterVideoInput.readyForMoreMediaData) {
+                if (CMTIME_COMPARE_INLINE(timestamp, ==, _videoTimestamp)) {
+                    return;
+                }
 				if ([_assetWriterVideoInput appendSampleBuffer:sampleBuffer]) {
                     _videoTimestamp = timestamp;
 				} else {
@@ -284,6 +287,9 @@
 			}
 		} else {
 			if (_assetWriterAudioInput.readyForMoreMediaData) {
+                if (CMTIME_COMPARE_INLINE(timestamp, ==, _videoTimestamp)) {
+                    return;
+                }
 				if ([_assetWriterAudioInput appendSampleBuffer:sampleBuffer]) {
                     _audioTimestamp = timestamp;
 				} else {

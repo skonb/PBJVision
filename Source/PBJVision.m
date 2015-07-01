@@ -564,7 +564,7 @@ typedef NS_ENUM(GLint, PBJVisionUniformLocationTypes)
     
     BOOL isRecording = _flags.recording;
     BOOL isPaused = _flags.paused;
-    if (isRecording && !isPaused) {
+    if (isRecording) {
         [self pauseVideoCapture];
     }
 
@@ -2176,10 +2176,16 @@ typedef void (^PBJVisionBlock)();
 
     // calculate the length of the interruption and store the offsets
     if (_flags.interrupted) {
-        if (isVideo) {
+        if (isVideo && _flags.audioCaptureEnabled) {
             CFRelease(sampleBuffer);
             return;
         }
+        
+        if (!_flags.audioCaptureEnabled && CMTIME_COMPARE_INLINE(currentTimestamp, ==, _mediaWriter.videoTimestamp)) {
+            CFRelease(sampleBuffer);
+            return;
+        }
+        
         
         // calculate the appropriate time offset
         if (CMTIME_IS_VALID(currentTimestamp) && CMTIME_IS_VALID(_mediaWriter.audioTimestamp)) {
